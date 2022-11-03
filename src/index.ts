@@ -1,7 +1,7 @@
 import http from 'node:http'
 import url from 'node:url'
 
-import { addUser, findAllUsers, findById, updateUser } from './user/user.service'
+import { addUser, findAllUsers, findById, patchUser, updateUser } from './user/user.service'
 
 const PORT = 8080
 
@@ -60,6 +60,23 @@ http.createServer(async (req, res) => {
 				.on('end', async () => {
 					// req.headers['content-type'] === 'application/json'
 					const user = await updateUser(id, JSON.parse(data))
+					res.writeHead(200, {
+						'Content-Type': 'application/json'
+					})
+					res.end(JSON.stringify(user))
+				})
+				.on('error', error => {
+					res.writeHead(500)
+					res.end(error.message)
+				})
+		} else if (method === 'PATCH') {
+			// PATCH http://localhost:8080/users/:id { name: 'Paperoga' }
+			let data = ''
+			req
+				.on('data', chunk => data += chunk)
+				.on('end', async () => {
+					// req.headers['content-type'] === 'application/json'
+					const user = await patchUser(id, JSON.parse(data))
 					res.writeHead(200, {
 						'Content-Type': 'application/json'
 					})
