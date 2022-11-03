@@ -1,7 +1,7 @@
 import http from 'node:http'
 import url from 'node:url'
 
-import { addUser, findAllUsers, findById, patchUser, updateUser } from './user/user.service'
+import { addUser, deleteUser, findAllUsers, findById, patchUser, updateUser } from './user/user.service'
 
 const PORT = 8080
 
@@ -86,6 +86,16 @@ http.createServer(async (req, res) => {
 					res.writeHead(500)
 					res.end(error.message)
 				})
+		} else if (method === 'DELETE') {
+			// DELETE http://localhost:8080/users/:id
+			try {
+				await deleteUser(id)
+				res.writeHead(204)
+				res.end()
+			} catch (error) {
+				res.writeHead(500)
+				res.end((error as Error).message)
+			}
 		} else {
 			res.writeHead(405)
 			res.end()

@@ -60,3 +60,12 @@ export async function patchUser(id: string | number, user: User) {
 
 	return updatedUser
 }
+
+export async function deleteUser(id: string | number) {
+	if (typeof id === 'string')
+		id = parseInt(id)
+
+	const index = USERS.findIndex(user => user.id === id)
+
+	USERS.splice(index, 1)
+}
