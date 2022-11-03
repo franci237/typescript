@@ -1,7 +1,9 @@
 import http from 'node:http'
 import url from 'node:url'
 
+import { User } from './user/user.model'
 import { addUser, deleteUser, findAllUsers, findById, patchUser, updateUser } from './user/user.service'
+import { readRequestBody } from './util/read-request-body'
 
 const PORT = 8080
 
@@ -54,21 +56,17 @@ http.createServer(async (req, res) => {
 				})
 		} else if (method === 'PUT') {
 			// PUT http://localhost:8080/users/:id { name: 'Paperoga' }
-			let data = ''
-			req
-				.on('data', chunk => data += chunk)
-				.on('end', async () => {
-					// req.headers['content-type'] === 'application/json'
-					const user = await updateUser(id, JSON.parse(data))
-					res.writeHead(200, {
-						'Content-Type': 'application/json'
-					})
-					res.end(JSON.stringify(user))
+			try {
+				const inputUser = await readRequestBody<User>(req)
+				const user = await updateUser(id, inputUser)
+				res.writeHead(200, {
+					'Content-Type': 'application/json'
 				})
-				.on('error', error => {
-					res.writeHead(500)
-					res.end(error.message)
-				})
+				res.end(JSON.stringify(user))
+			} catch (error) {
+				res.writeHead(500)
+				res.end((error as Error).message)
+			}
 		} else if (method === 'PATCH') {
 			// PATCH http://localhost:8080/users/:id { name: 'Paperoga' }
 			let data = ''
