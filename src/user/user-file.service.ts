@@ -3,7 +3,9 @@ import path from 'node:path'
 
 import { User } from './user.model'
 
-const USER_COLLECTION_PATH = path.join('db', 'users.json')
+const DB_FOLDER = process.env.DB_FOLDER || 'db'
+const DB_FILENAME = process.env.DB_FILENAME || 'users.json'
+const USER_COLLECTION_PATH = path.join(DB_FOLDER, DB_FILENAME)
 
 async function readFromCollection() {
 	const data = await fs.readFile(USER_COLLECTION_PATH)

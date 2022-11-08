@@ -4,7 +4,7 @@ import url from 'node:url'
 // import { doDelete, doGet, doPatch, doPost, doPut } from './user/user.controller'
 import * as userController from './user/user.controller'
 
-const PORT = 8080
+const PORT = process.env.PORT || 8080
 
 http.createServer(async (req, res) => {
 	if (!req.url) return res.end()
