@@ -41,6 +41,6 @@ export function runSimpleServer() {
 			res.end()
 		}
 	})
-		.listen(8080)
+		.listen(PORT)
 		.on('listening', () => console.log(`Server ready at http://localhost:${PORT}`))
 }
