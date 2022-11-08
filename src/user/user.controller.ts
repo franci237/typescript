@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from 'node:http'
 import url from 'node:url'
 import { readRequestBody } from '../util/read-request-body'
 import { User } from './user.model'
-import { addUser, deleteUser, findAllUsers, findById, patchUser, updateUser } from './user.service'
+import { addUser, deleteUser, findAllUsers, findById, patchUser, updateUser } from './user-file.service'
 
 export async function doGet(req: IncomingMessage, res: ServerResponse) {
 	if (!req.url) return res.end()

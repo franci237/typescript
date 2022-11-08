@@ -28,19 +28,58 @@ export async function findById(id: string | number) {
 }
 
 export async function addUser(user: User) {
+	const USERS = await readFromCollection()
+	const newUser = {
+		...user,
+		id: USERS.length + 1
+	}
+	USERS.push(newUser)
+	await writeToCollection(USERS)
+
+	return newUser
 }
 
 export async function updateUser(id: string | number, user: User) {
 	if (typeof id === 'string')
 		id = parseInt(id)
+
+	const USERS = await readFromCollection()
+	const index = USERS.findIndex(user => user.id === id)
+	const updatedUser = {
+		...user,
+		id
+	}
+	USERS[index] = updatedUser
+	await writeToCollection(USERS)
+
+	return updatedUser
 }
 
 export async function patchUser(id: string | number, user: User) {
 	if (typeof id === 'string')
 		id = parseInt(id)
+
+	const USERS = await readFromCollection()
+	const index = USERS.findIndex(user => user.id === id)
+	const originalUser = USERS[index]
+	const updatedUser = {
+		...originalUser,
+		...user,
+		id
+	}
+	USERS[index] = updatedUser
+	await writeToCollection(USERS)
+
+	return updatedUser
 }
 
 export async function deleteUser(id: string | number) {
 	if (typeof id === 'string')
 		id = parseInt(id)
+
+	const USERS = await readFromCollection()
+	const index = USERS.findIndex(user => user.id === id)
+	USERS.splice(index, 1)
+
+	return writeToCollection(USERS)
 }
